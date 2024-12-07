@@ -1,17 +1,17 @@
 "use client";
 
 import { usePathname } from 'next/navigation';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, ReactNode } from 'react';
 import Link from 'next/link';
 
 type NavItem = {
   name: string;
   href?: string;
-  icon: JSX.Element;
+  icon: ReactNode;
   children?: Array<{
     name: string;
     href: string;
-    icon: JSX.Element;
+    icon: ReactNode;
   }>;
 };
 
@@ -63,6 +63,15 @@ export function Sidebar({ isOpen = true, onClose = () => {} }: SidebarProps) {
           icon: (
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7c-2 0-3 1-3 3z" />
+            </svg>
+          )
+        },
+        {
+          name: 'Auth',
+          href: '/test-pages/auth',
+          icon: (
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
             </svg>
           )
         },
