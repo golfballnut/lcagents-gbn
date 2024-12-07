@@ -16,18 +16,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [response, setResponse] = useState<AuthResponse | null>(null)
   const router = useRouter()
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError(null)
-    setResponse(null)
 
     try {
-      // 1. Attempt login
-      console.log('[Login] Starting...', { email })
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -35,28 +31,13 @@ export default function LoginPage() {
 
       if (error) throw error
 
-      // 2. Check session
-      const { data: { session } } = await supabase.auth.getSession()
-      
-      // 3. Store full response
-      setResponse({
-        session: data.session,
-        user: data.user,
-        cookies: document.cookie.split(';').map(c => c.trim())
-      })
+      console.log('[Login] Success:', { user: data.user?.email })
+      router.push('/dashboard')
+      router.refresh()
 
-      console.log('[Login] Complete', { 
-        hasUser: !!data.user,
-        hasSession: !!session,
-        cookies: document.cookie
-      })
-
-      // 4. No redirect - let's verify everything first
-      
     } catch (error: any) {
-      console.error('[Login] Failed:', error)
+      console.error('[Login] Error:', error.message)
       setError(error.message)
-      setResponse({ error: error.message })
     } finally {
       setLoading(false)
     }
@@ -112,15 +93,6 @@ export default function LoginPage() {
             {loading ? 'Testing Login...' : 'Test Login'}
           </button>
         </form>
-
-        {response && (
-          <div className="mt-4 p-4 rounded-md bg-gray-50 dark:bg-gray-900/50 border border-black/[.08] dark:border-white/[.145]">
-            <h2 className="text-sm font-medium mb-2">Auth Response:</h2>
-            <pre className="text-xs overflow-auto max-h-64">
-              {JSON.stringify(response, null, 2)}
-            </pre>
-          </div>
-        )}
       </div>
     </div>
   )
